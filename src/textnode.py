@@ -47,21 +47,35 @@ def text_node_to_html_node(text_node: TextNode) -> LeafNode:
             return LeafNode("code", text_node.text)
 
         case TextType.LINK:
-            return LeafNode(
-                "a",
-                text_node.text,
-                {"href": text_node.url},
-            )
+            return LeafNode("a", text_node.text, {"href": text_node.url})
 
         case TextType.IMAGE:
-            return LeafNode(
-                "img",
-                "",
-                {
-                    "src": text_node.url,
-                    "alt": text_node.text,
-                },
-            )
+            return LeafNode("img", "", {"src": text_node.url, "alt": text_node.text})
 
         case _:
             raise Exception("Invalid TextType")
+
+def split_nodes_delimiter(old_nodes: list[TextNode], delimiter: str, text_type: TextType) -> list[TextNode]:
+    new_nodes = []
+
+    for node in old_nodes:
+        if node.text_type != TextType.TEXT:
+            new_nodes.append(node)
+            continue
+
+        sections = node.text.split(delimiter)
+
+        if len(sections) % 2 == 0:
+            raise ValueError(f"Invalid markdown syntax: unmatched delimiter '{delimiter}")
+
+        for i, section in enumerate(sections):
+            if section == "":
+                continue
+
+            if i % 2 == 0:
+                new_nodes.append(TextNode(section, TextType.TEXT))
+            else:
+                new_nodes.append(TextNode(section, text_type))
+
+    return new_nodes
+
