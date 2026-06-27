@@ -3,7 +3,9 @@ from htmlnode import HTMLNode
 
 
 class LeafNode(HTMLNode):
-    def __init__(self, tag: str | None, value: str | None, props: dict[str, str] | None = None) -> None:
+    def __init__(
+        self, tag: str | None, value: str | None, props: dict[str, str] | None = None
+    ) -> None:
         if value is None:
             raise ValueError("LeafNode must have a value")
 
@@ -16,8 +18,8 @@ class LeafNode(HTMLNode):
 
         if self.tag is None:
             return self.value
-        
-        return f'<{self.tag}{self.props_to_html()}>{self.value}</{self.tag}>'
+
+        return f"<{self.tag}{self.props_to_html()}>{self.value}</{self.tag}>"
 
     @override
     def __repr__(self) -> str:

@@ -4,7 +4,6 @@ from textnode import extract_markdown_images, extract_markdown_links
 
 
 class TestExtractMarkdown(unittest.TestCase):
-
     def test_extract_markdown_images(self):
         matches = extract_markdown_images(
             "This is text with an ![image](https://i.imgur.com/zjjcJKZ.png)"
@@ -44,9 +43,7 @@ class TestExtractMarkdown(unittest.TestCase):
         )
 
     def test_extract_markdown_links_single(self):
-        matches = extract_markdown_links(
-            "Click [here](https://example.com) for more."
-        )
+        matches = extract_markdown_links("Click [here](https://example.com) for more.")
         self.assertListEqual([("here", "https://example.com")], matches)
 
     def test_extract_markdown_links_no_links(self):

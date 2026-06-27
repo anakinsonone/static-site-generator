@@ -2,6 +2,7 @@ import unittest
 from parentnode import ParentNode
 from leafnode import LeafNode
 
+
 class TestParentNode(unittest.TestCase):
     # 1. Test basic parent with one child
     def test_to_html_with_children(self):
@@ -37,11 +38,7 @@ class TestParentNode(unittest.TestCase):
 
     # 4. Test that it works with HTML attributes (props)
     def test_to_html_with_props(self):
-        node = ParentNode(
-            "p",
-            [LeafNode("b", "Bold text")],
-            {"class": "text-bold"}
-        )
+        node = ParentNode("p", [LeafNode("b", "Bold text")], {"class": "text-bold"})
         self.assertEqual(
             node.to_html(),
             '<p class="text-bold"><b>Bold text</b></p>',
@@ -59,6 +56,7 @@ class TestParentNode(unittest.TestCase):
         node = ParentNode("div", None)
         with self.assertRaises(ValueError):
             node.to_html()
+
 
 if __name__ == "__main__":
     unittest.main()

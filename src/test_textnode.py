@@ -9,7 +9,6 @@ from textnode import (
 
 
 class TestTextNodeToHTMLNode(unittest.TestCase):
-
     def test_text(self):
         node = TextNode(
             "This is a text node",
@@ -103,7 +102,7 @@ class TestTextNodeToHTMLNode(unittest.TestCase):
             "This is text with a `code block` word",
             TextType.TEXT,
         )
-    
+
         self.assertEqual(
             split_nodes_delimiter([node], "`", TextType.CODE),
             [
@@ -112,14 +111,13 @@ class TestTextNodeToHTMLNode(unittest.TestCase):
                 TextNode(" word", TextType.TEXT),
             ],
         )
-    
-    
+
     def test_bold(self):
         node = TextNode(
             "This is **bold** text",
             TextType.TEXT,
         )
-    
+
         self.assertEqual(
             split_nodes_delimiter([node], "**", TextType.BOLD),
             [
@@ -128,14 +126,13 @@ class TestTextNodeToHTMLNode(unittest.TestCase):
                 TextNode(" text", TextType.TEXT),
             ],
         )
-    
-    
+
     def test_multiple(self):
         node = TextNode(
             "a `code` and `more code`",
             TextType.TEXT,
         )
-    
+
         self.assertEqual(
             split_nodes_delimiter([node], "`", TextType.CODE),
             [
@@ -145,24 +142,22 @@ class TestTextNodeToHTMLNode(unittest.TestCase):
                 TextNode("more code", TextType.CODE),
             ],
         )
-    
-    
+
     def test_invalid_markdown(self):
         node = TextNode(
             "This is `broken markdown",
             TextType.TEXT,
         )
-    
+
         with self.assertRaises(ValueError):
             split_nodes_delimiter([node], "`", TextType.CODE)
-    
-    
+
     def test_non_text_nodes_unchanged(self):
         node = TextNode(
             "already bold",
             TextType.BOLD,
         )
-    
+
         self.assertEqual(
             split_nodes_delimiter([node], "`", TextType.CODE),
             [node],
