@@ -95,3 +95,69 @@ def extract_markdown_images(text: str) -> list[tuple[str, str]]:
 
 def extract_markdown_links(text: str) -> list[tuple[str, str]]:
     return re.findall(r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)", text)
+
+
+def split_nodes_image(old_nodes: list[TextNode]) -> list[TextNode]:
+    new_nodes = []
+
+    for node in old_nodes:
+        if node.text_type != TextType.TEXT:
+            new_nodes.append(node)
+            continue
+
+        text = node.text
+        matches = list(re.finditer(r"!\[([^\[\]]*)\]\(([^\(\)]*)\)", text))
+
+        if not matches:
+            new_nodes.append(node)
+            continue
+
+        last_end = 0
+        for match in matches:
+            alt, url = match.group(1), match.group(2)
+
+            if match.start() > last_end:
+                new_nodes.append(
+                    TextNode(text[last_end : match.start()], TextType.TEXT)
+                )
+
+            new_nodes.append(TextNode(alt, TextType.IMAGE, url))
+            last_end = match.end()
+
+        if last_end < len(text):
+            new_nodes.append(TextNode(text[last_end:], TextType.TEXT))
+
+    return new_nodes
+
+
+def split_nodes_link(old_nodes: list[TextNode]) -> list[TextNode]:
+    new_nodes = []
+
+    for node in old_nodes:
+        if node.text_type != TextType.TEXT:
+            new_nodes.append(node)
+            continue
+
+        text = node.text
+        matches = list(re.finditer(r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)", text))
+
+        if not matches:
+            new_nodes.append(node)
+            continue
+
+        last_end = 0
+        for match in matches:
+            anchor, url = match.group(1), match.group(2)
+
+            if match.start() > last_end:
+                new_nodes.append(
+                    TextNode(text[last_end : match.start()], TextType.TEXT)
+                )
+
+            new_nodes.append(TextNode(anchor, TextType.LINK, url))
+            last_end = match.end()
+
+        if last_end < len(text):
+            new_nodes.append(TextNode(text[last_end:], TextType.TEXT))
+
+    return new_nodes
