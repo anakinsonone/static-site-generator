@@ -45,6 +45,13 @@ def block_to_block_type(block: str) -> BlockType:
     return BlockType.PARAGRAPH
 
 
+def extract_title(markdown: str) -> str:
+    for line in markdown.split("\n"):
+        if line.startswith("# "):
+            return line[2:].strip()
+    raise Exception("no h1 header found")
+
+
 def text_to_children(text: str) -> list[LeafNode]:
     text_nodes = text_to_textnodes(text)
     return [text_node_to_html_node(node) for node in text_nodes]
