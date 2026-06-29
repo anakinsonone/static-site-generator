@@ -9,7 +9,19 @@ def copy_static_to_public() -> None:
         return
     if os.path.exists("public"):
         shutil.rmtree("public")
-    shutil.copytree("static", "public")
+
+    def _copy_dir(src: str, dst: str) -> None:
+        os.mkdir(dst)
+        for entry in os.listdir(src):
+            src_path = os.path.join(src, entry)
+            dst_path = os.path.join(dst, entry)
+            if os.path.isfile(src_path):
+                shutil.copy(src_path, dst_path)
+                print(f"Copying {src_path} to {dst_path}")
+            else:
+                _copy_dir(src_path, dst_path)
+
+    _copy_dir("static", "public")
 
 
 def main():
